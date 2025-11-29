@@ -1,29 +1,29 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"net/url"
+    "fmt"
+    "net/http"
+    "net/url"
 )
 
-// --- types from previous step ---
-
+// Backend holds the URL of a backend server.
 type Backend struct {
-	URL *url.URL
+    URL *url.URL
 }
 
+// RoundRobinBalancer holds the list of backends and the index.
 type RoundRobinBalancer struct {
-	backends []*Backend
-	current  int
+    backends []*Backend
+    current  int
 }
 
 func (b *RoundRobinBalancer) Next() *Backend {
-	if len(b.backends) == 0 {
-		return nil
-	}
-	backend := b.backends[b.current]
-	b.current = (b.current + 1) % len(b.backends)
-	return backend
+    if len(b.backends) == 0 {
+        return nil
+    }
+    backend := b.backends[b.current]
+    b.current = (b.current + 1) % len(b.backends)
+    return backend
 }
 
 // --- main and handler ---
