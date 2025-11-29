@@ -2,29 +2,19 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
-	"os"
 )
 
-func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("Usage: go run backend_server.go <port>")
-		fmt.Println("Example: go run backend_server.go 8081")
-		os.Exit(1)
-	}
-
-	port := os.Args[1]
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		message := fmt.Sprintf("Response from backend server on port %s\n", port)
-		log.Printf("Received request on port %s: %s %s", port, r.Method, r.URL.Path)
-		fmt.Fprint(w, message)
-	})
-
-	log.Printf("Backend server starting on port %s", port)
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
-		log.Fatal(err)
-	}
+func backend2Handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Hello from backend 2")
 }
 
+func main() {
+	http.HandleFunc("/", backend2Handler)
+
+	fmt.Println("Backend 2 listening on :9002")
+	err := http.ListenAndServe(":9002", nil)
+	if err != nil {
+		fmt.Println("Error starting server:", err)
+	}
+}
